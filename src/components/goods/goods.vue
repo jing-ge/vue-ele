@@ -1,6 +1,6 @@
 <template>
 	<div class="goods">
-		<div class="menu-wrapper">
+		<div class="menu-wrapper" ref="menu-wrapper">
 			<ul>
 				<li v-for="item in goods" class="menu-item">
 					<span class="menu-text">
@@ -9,7 +9,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="foods-wrapper">
+		<div class="foods-wrapper" ref="foods-wrapper">
 			<ul>
 				<li v-for="item in goods" class="food-list">
 					<h1 class="food-title">{{item.name}}</h1>
@@ -39,6 +39,7 @@
 	
 </template>
 <script type="text/javascript">
+import BScroll from 'better-scroll'
 const ERR_OK = 0
 export default {
   props: {
@@ -57,8 +58,18 @@ export default {
       var res = json.body
       if (res.errno === ERR_OK) {
         this.goods = res.data
+        console.log(res.data)
+        this.$nextTick(() => {
+          this._initScroll()
+        })
       }
     })
+  },
+  methods: {
+    _initScroll () {
+      this.menuScroll = new BScroll(this.$refs['menu-wrapper'], {})
+      this.foodsScroll = new BScroll(this.$refs['foods-wrapper'], {})
+    }
   }
 }
 </script>
@@ -139,12 +150,7 @@ export default {
 	.food-item{
 		display: flex;
 		margin: 18px;
-		padding-bottom: 18px;
-	    border-top: 1px solid rgba(1,17,27,0.1);
-	}
-	.food-item:last-child{
-		display: none;
-		margin-bottom: 0px;
+		padding-top: 18px;   
 	}
 	.food-icon{
 		flex: 0 0 57px;
@@ -166,6 +172,7 @@ export default {
 		color: rgb(147,153,159);
 	}
 	.food-desc{
+		line-height: 12px;
 		margin-bottom: 8px;
 	}
 	.food-extra{
@@ -185,5 +192,12 @@ export default {
 		text-decoration: line-through;
 		font-size: 10px;
 		color: rgb(147,153,159);
+	}
+	.border-1px{
+		border-top: 1px solid rgba(1,17,27,0.1);
+	}
+	.border-1px:first-child{
+		border-top: 0px solid rgba(1,17,27,0.1);
+		margin-top: 0px;
 	}
 </style>
