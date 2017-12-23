@@ -26,7 +26,7 @@
 									<span>好评率{{food.rating}}%</span>
 								</div>
 								<div class="price">
-									<span class="price-now">￥{{food.price}}</span>
+									<span class="price-now">¥{{food.price}}</span>
 									<span class="price-old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
 								</div>
 							</div>
@@ -35,11 +35,12 @@
 				</li>
 			</ul>
 		</div>	
+		<shopcart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
 	</div>
-	
 </template>
 <script type="text/javascript">
 import BScroll from 'better-scroll'
+import shopcart from '@/components/shopcart/shopcart'
 const ERR_OK = 0
 export default {
   props: {
@@ -109,6 +110,9 @@ export default {
       }
       return 0
     }
+  },
+  components: {
+    shopcart
   }
 }
 </script>
