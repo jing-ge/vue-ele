@@ -3,16 +3,17 @@
 		<div class="shopcart-content">
 			<div class="content-left">
 				<div class="shopcart-logo-wrapper">
-					<div class="shopcart-logo">
-						<span class="icon-shopping_cart"></span>
+					<div class="shopcart-logo" :class="{'shopcarthighlight':totalCount>0}">
+						<span class="icon-shopping_cart" :class="{'backgroundhighlight':totalCount>0}"></span>
 					</div>
+					<div class="num" v-show="totalCount>0">{{totalCount}}</div>
 				</div>
-				<div class="shopcart-price">¥{{totalPrice}}元</div>
+				<div class="shopcart-price" :class="{'backgroundhighlight':totalPrice>0}">¥{{totalPrice}}元</div>
 				<div class="shopcart-desc">另需配送费{{deliveryPrice}}元</div>
 			</div>
 			<div class="shopcart-content-right">
-				<div class="shopcart-pay">
-					¥{{minPrice}}元起送
+				<div class="shopcart-pay" :class="payClass">
+					{{payDesc}}
 				</div>
 			</div>
 		</div>
@@ -32,7 +33,12 @@ export default {
     selectFoods: {
       type: Array,
       default () {
-        return []
+        return [
+          {
+            price: 100,
+            count: 1
+          }
+        ]
       }
     }
   },
@@ -50,6 +56,23 @@ export default {
         count += food.count
       })
       return count
+    },
+    payDesc () {
+      if (this.totalPrice === 0) {
+        return `¥${this.minPrice}元起送`
+      } else if (this.totalPrice < this.minPrice) {
+        let diff = this.minPrice - this.totalPrice
+        return `还差¥${diff}元起送`
+      } else {
+        return '去结算'
+      }
+    },
+    payClass () {
+      if (this.totalPrice < this.minPrice) {
+        return 'notenough'
+      } else {
+        return 'enough'
+      }
     }
   }
 }
@@ -91,6 +114,12 @@ export default {
 		background: #2b343c;
 		text-align: center;
 	}
+	.shopcarthighlight{
+		background: rgb(0,160,220);
+	}
+	.backgroundhighlight{
+		color: #fff !important;
+	}
 	.icon-shopping_cart{
 		line-height: 44px;
 		font-size: 24px;
@@ -129,5 +158,27 @@ export default {
 		color: rgba(255,255,255,0.4);
 		font-weight: 700;
 		background: #2b333b;
+	}
+	.num {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 24px;
+		height: 16px;
+		line-height: 16px;
+		text-align: center;
+		border-radius: 16px;
+		font-size: 9px;
+		font-weight: 700;
+		color: #fff;
+		background: rgb(240,20,20);
+		box-shadow: 0 4px 8px 0 rgba(0,0,0,0.4);
+	}
+	.notenough{
+		background: #2b333b;
+	}
+	.enough{
+		background: #00b43c;
+		color: #fff;
 	}
 </style>
